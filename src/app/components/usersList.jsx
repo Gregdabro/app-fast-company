@@ -7,12 +7,13 @@ import api from "../api";
 
 const UsersList = () => {
     const params = useParams();
+    const { userId } = params;
     const [users, setUsers] = useState(null);
 
     useEffect(() => {
         api.users.fetchAll().then((data) => setUsers(data));
     }, []);
-    const { userId } = params;
+    
     return (
         <>
             {userId
