@@ -4,6 +4,7 @@ import api from "../../../api";
 import Loader from "../../UI/Loader/Loader";
 import UserCard from "../../UI/userCard";
 import QualitiesCard from "../../UI/qualitiesCard";
+import MeetingsCard from "../../UI/meetingsCard";
 
 const UserPage = () => {
     const [user, setUser] = useState(undefined);
@@ -21,6 +22,7 @@ const UserPage = () => {
                     <div className="col-md-4 mb-3">
                         <UserCard user={user}/>
                         <QualitiesCard data={user.qualities}/>
+                        <MeetingsCard value={user.completedMeetings}/>
                     </div>
                     <div className="col-md-8">Comments</div>
                 </div>
