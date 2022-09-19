@@ -129,7 +129,6 @@ const UserEditForm = () => {
         });
         history.replace(`/users/${userId}`);
     };
-
     return (
         <form onSubmit={handleSubmit}>
             <TextField
