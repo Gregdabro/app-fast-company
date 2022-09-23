@@ -18,7 +18,7 @@ const UserCard = ({ user }) => {
                     <i className="bi bi-gear"></i>
                 </button>
                 <div className="d-flex flex-column align-items-center text-center position-relative">
-                    <UserAvatar/>
+                    <UserAvatar user={user}/>
                     <div className="mt-3">
                         <h4>{user.name}</h4>
                         <p className="text-secondary mb-1">{user.profession.name}</p>

@@ -1,5 +1,5 @@
 import React from "react";
-import UserEditForm from "../../UI/userEditForm";
+import UserEditForm from "../../UI/userEditForm/userEditForm";
 import BackButton from "../../common/backButton";
 const UserPageEdit = () => {
     return (

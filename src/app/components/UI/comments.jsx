@@ -7,6 +7,7 @@ import PropTypes from "prop-types";
 
 const Comments = ({ userId }) => {
     const [comments, setComments] = useState([]);
+
     useEffect(() => {
         api.comments
             .fetchCommentsForUser(userId)
@@ -22,12 +23,11 @@ const Comments = ({ userId }) => {
     const handleRemoveComment = (id) => {
         api.comments
             .remove(id)
-            .then(() => {
-                setComments(comments.filter((item) => item._id !== id));
-            });
+            .then((commentsForUser) => setComments(commentsForUser));
     };
 
     const sortedComments = orderBy(comments, ["created_at"], ["desc"]);
+
     return (
         <>
             <div className="card mb-2">
@@ -38,7 +38,7 @@ const Comments = ({ userId }) => {
                     />
                 </div>
             </div>
-            {sortedComments.length > 0 && (
+            {sortedComments && (
                 <div className="card mb-3">
                     <div className="card-body ">
                         <h2>Comments</h2>

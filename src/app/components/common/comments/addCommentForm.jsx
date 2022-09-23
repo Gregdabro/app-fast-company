@@ -4,7 +4,7 @@ import { validator } from "../../../utils/validator";
 import api from "../../../api";
 import SelectField from "../form/selectField";
 import TextAreaField from "../form/textAreaField";
-
+import { validatorConfig } from "./validatorConfig";
 const initialData = { userId: "", content: "" };
 
 const AddCommentForm = ({ onSubmit }) => {
@@ -17,19 +17,6 @@ const AddCommentForm = ({ onSubmit }) => {
             ...prevState,
             [target.name]: target.value
         }));
-    };
-
-    const validatorConfig = {
-        userId: {
-            isRequired: {
-                message: "Выбирите пользователя от чьего имени хотите отправить сообщение"
-            }
-        },
-        content: {
-            isRequired: {
-                message: "Cообщение не должно быть пустым"
-            }
-        }
     };
 
     const validate = () => {

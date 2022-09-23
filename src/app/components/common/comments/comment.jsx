@@ -15,13 +15,11 @@ const Comment = (
         _id: id
     }) => {
     const [user, setUser] = useState();
-    const [isLoading, setIsLoading] = useState(false);
+    const [isLoading] = useState(false);
 
     useEffect(() => {
-        setIsLoading(true);
         api.users.getById(userId).then((data) => {
             setUser(data);
-            setIsLoading(false);
         });
     }, []);
 
@@ -33,7 +31,7 @@ const Comment = (
                     : (
                         <div className="col">
                             <div className="d-flex flex-start ">
-                                <UserAvatar/>
+                                <UserAvatar user={user}/>
                                 <div className="flex-grow-1 flex-shrink-1">
                                     <div className="mb-4">
                                         <div className="d-flex justify-content-between align-items-center">

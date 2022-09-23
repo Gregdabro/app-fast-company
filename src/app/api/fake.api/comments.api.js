@@ -62,7 +62,10 @@ const remove = (id) =>
             const comments = JSON.parse(localStorage.getItem("comments"));
             const newComments = comments.filter((x) => x._id !== id);
             localStorage.setItem("comments", JSON.stringify(newComments));
-            resolve(id);
+
+            const pageId = comments.filter((x) => x._id === id)[0].pageId;
+            const commentsForUser = newComments.filter((x) => x.pageId === pageId);
+            resolve(commentsForUser);
         }, 200);
     });
 export default {
