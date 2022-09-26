@@ -6,6 +6,7 @@ import UserCard from "../../UI/userCard";
 import QualitiesCard from "../../UI/qualitiesCard";
 import MeetingsCard from "../../UI/meetingsCard";
 import Comments from "../../UI/comments";
+import UserProvider from "../../../hooks/useUsers";
 
 const UserPage = () => {
     const [user, setUser] = useState(undefined);
@@ -18,19 +19,21 @@ const UserPage = () => {
 
     if (user) {
         return (
-            <div className="container">
-                <div className="row gutters-sm">
-                    <div className="col-md-4 mb-3">
-                        <UserCard user={user}/>
-                        <QualitiesCard data={user.qualities}/>
-                        <MeetingsCard value={user.completedMeetings}/>
+            <UserProvider>
+                <div className="container">
+                    <div className="row gutters-sm">
+                        <div className="col-md-4 mb-3">
+                            <UserCard user={user}/>
+                            <QualitiesCard data={user.qualities}/>
+                            <MeetingsCard value={user.completedMeetings}/>
+                        </div>
+                        <div className="col-md-8">
+                            <Comments userId={userId} />
+                        </div>
                     </div>
-                    <div className="col-md-8">
-                        <Comments userId={userId} />
-                    </div>
-                </div>
 
-            </div>
+                </div>
+            </UserProvider>
         );
     } else {
         return <Loader/>;
