@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { validator } from "../../utils/validator";
-import TextField from "../common/form/textField";
-import CheckBoxField from "../common/form/checkBoxField";
+import { validator } from "../../../utils/validator";
+import TextField from "../../common/form/textField";
+import CheckBoxField from "../../common/form/checkBoxField";
+import { validatorConfig } from "./validatorConfig";
+
 const LoginForm = () => {
     const [data, setData] = useState({
         email: "",
@@ -23,32 +25,6 @@ const LoginForm = () => {
     };
 
     const isValid = Object.keys(errors).length === 0;
-
-    const validatorConfig = {
-        email: {
-            isRequired: {
-                message: "Email is required!"
-            },
-            isEmail: {
-                message: "Email is not valid!"
-            }
-        },
-        password: {
-            isRequired: {
-                message: "Password is required!"
-            },
-            isCapitalSymbol: {
-                message: "Password must contain a minimum of 1 upper case letter!"
-            },
-            isContainDigit: {
-                message: "Password must contain a minimum of 1 digit!"
-            },
-            min: {
-                message: "Passwords must be at least 8 characters!",
-                value: 8
-            }
-        }
-    };
 
     useEffect(() => {
         validate();

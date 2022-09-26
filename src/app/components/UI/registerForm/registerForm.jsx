@@ -1,22 +1,22 @@
 import React, { useEffect, useState } from "react";
-import { validator } from "../../utils/validator";
-import TextField from "../common/form/textField";
-import api from "../../api";
-import SelectField from "../common/form/selectField";
-import RadioField from "../common/form/radioField";
-import MultiSelectField from "../common/form/multiSelectField";
-import { useHistory, useParams } from "react-router-dom";
-const UserEditForm = () => {
-    const history = useHistory();
-    const params = useParams();
-    const { userId } = params;
+import { validator } from "../../../utils/validator";
+import TextField from "../../common/form/textField";
+import api from "../../../api";
+import SelectField from "../../common/form/selectField";
+import RadioField from "../../common/form/radioField";
+import MultiSelectField from "../../common/form/multiSelectField";
+import CheckBoxField from "../../common/form/checkBoxField";
+import { validatorConfig } from "./validatorConfig";
+
+const RegisterForm = () => {
     const [professions, setProfession] = useState(null);
     const [data, setData] = useState({
-        name: "",
         email: "",
+        password: "",
         profession: "",
         sex: "mail",
-        qualities: []
+        qualities: [],
+        license: false
     });
     const [errors, setErrors] = useState({});
     const [qualities, setQualities] = useState([]);
@@ -84,67 +84,34 @@ const UserEditForm = () => {
 
     const isValid = Object.keys(errors).length === 0;
 
-    const validatorConfig = {
-        email: {
-            isRequired: {
-                message: "Email is required!"
-            },
-            isEmail: {
-                message: "Email is not valid!"
-            }
-        },
-        name: {
-            isRequired: {
-                message: "Name is required!"
-            },
-            isCapitalSymbol: {
-                message: "Name must contain a minimum of 1 upper case letter!"
-            },
-            min: {
-                message: "Passwords must be at least 3 characters!",
-                value: 3
-            }
-        },
-        profession: {
-            isRequired: {
-                message: "Profession is required"
-            }
-        },
-        license: {
-            isRequired: {
-                message: "Вы не можете использовать наш сервис без подтверждения лицензионного соглашения"
-            }
-        }
-    };
-
     const handleSubmit = (e) => {
         e.preventDefault();
         const isValidate = validate();
         if (!isValidate) return;
         const { profession, qualities } = data;
-        api.users.update(userId, {
+        console.log({
             ...data,
             profession: getProfessionById(profession),
             qualities: getQualities(qualities)
         });
-        history.replace(`/users/${userId}`);
     };
 
     return (
         <form onSubmit={handleSubmit}>
-            <TextField
-                name="name"
-                onChange={handleChange}
-                value={data.name}
-                label="Имя"
-                error={errors.name}
-            />
             <TextField
                 name="email"
                 onChange={handleChange}
                 value={data.email}
                 label="Email"
                 error={errors.email}
+            />
+            <TextField
+                name="password"
+                onChange={handleChange}
+                value={data.password}
+                type="password"
+                label="password"
+                error={errors.password}
             />
             <SelectField
                 value={data.profession}
@@ -174,15 +141,23 @@ const UserEditForm = () => {
                 label="Выбирите ваши качества"
                 defaultValue={data.qualities}
             />
+            <CheckBoxField
+                value={data.license}
+                onChange={handleChange}
+                name="license"
+                error={errors.license}
+            >
+                Подтвердить <a>лицензионное соглашение</a>
+            </CheckBoxField>
             <button
                 className="btn btn-primary w-100 mx-auto"
                 type="submit"
                 disabled={!isValid}
             >
-                Update
+                Submit
             </button>
         </form>
     );
 };
 
-export default UserEditForm;
+export default RegisterForm;
