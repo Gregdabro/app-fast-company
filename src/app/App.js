@@ -4,10 +4,8 @@ import { Route, Switch } from "react-router-dom";
 import Login from "./layouts/login";
 import Home from "./layouts/home";
 import NotFoundPage from "./components/UI/notFoundPage";
-import UserPage from "./components/page/userPage/userPage";
-import UsersListPage from "./components/page/usersListPage";
-import UserPageEdit from "./components/page/userPage/userPageEdit";
-import UserProvider from "./hooks/useUsers";
+import Users from "./layouts/users";
+import { ToastContainer } from "react-toastify";
 
 function App() {
     return (
@@ -16,13 +14,10 @@ function App() {
             <Switch>
                 <Route path="/" exact component={ Home } />
                 <Route path="/login/:type?" component={ Login } />
-                <UserProvider>
-                    <Route path="/users/:userId/edit" component={ UserPageEdit } />
-                    <Route path="/users/:userId" component={ UserPage } />
-                    <Route path="/users" component={ UsersListPage } />
-                </UserProvider>
+                <Route path="/users/:userId?/:edit?" component={ Users } />
                 <Route path="*" component={ NotFoundPage } />
             </Switch>
+            <ToastContainer/>
         </>
     );
 };
