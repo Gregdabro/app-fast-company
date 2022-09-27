@@ -18,7 +18,6 @@ const UsersListPage = () => {
     const [searchQuery, setSearchQuery] = useState("");
 
     const { users } = useUser();
-    console.log("users", users);
 
     useEffect(() => {
         api.professions.fetchAll().then((data) => setProfession(data));
