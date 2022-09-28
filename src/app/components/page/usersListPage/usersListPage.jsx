@@ -8,7 +8,7 @@ import UsersTable from "../../UI/usersTable";
 import { orderBy } from "lodash";
 import Loader from "../../UI/Loader/Loader";
 import SearchInput from "../../common/form/searchInput";
-import { useUser } from "../../../hooks/useQualities";
+import { useUser } from "../../../hooks/useUsers";
 
 const UsersListPage = () => {
     const [currentPage, setCurrentPage] = useState(1);
