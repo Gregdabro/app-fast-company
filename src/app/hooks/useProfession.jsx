@@ -40,7 +40,11 @@ export const ProfessionProvider = ({ children }) => {
         return professions.find((p) => p._id === id);
     }
 
-    return <ProfessionContext.Provider value={{ professions, getProfession, isLoading }}>{children}</ProfessionContext.Provider>;
+    return <ProfessionContext.Provider
+        value={{ professions, getProfession, isLoading }}
+    >
+        {children}
+    </ProfessionContext.Provider>;
 };
 
 ProfessionProvider.propTypes = {
