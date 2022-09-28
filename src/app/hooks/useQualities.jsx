@@ -1,0 +1,59 @@
+import React, { useContext, useEffect, useState } from "react";
+import qualityService from "../services/quality.service";
+import { toast } from "react-toastify";
+import PropTypes from "prop-types";
+import { errorCatcher } from "../utils/errorCatcher";
+
+const QualitiesContext = React.createContext();
+
+export const useQualities = () => {
+    return useContext(QualitiesContext);
+};
+
+const QualitiesProvider = ({ children }) => {
+    const [qualities, setQualities] = useState([]);
+    const [error, setError] = useState(null);
+    const [isLoading, setIsLoading] = useState(true);
+
+    useEffect(() => {
+        const getQualities = async() => {
+            try {
+                const { content } = await qualityService.fetchAll();
+                setQualities(content);
+                setIsLoading(false);
+            } catch (error) {
+                errorCatcher(error, setError);
+            }
+        };
+        getQualities();
+    }, []);
+
+    const getQuality = (id) => {
+        return qualities.find((q) => q._id === id);
+    };
+
+    useEffect(() => {
+        if (error !== null) {
+            toast(error);
+            setError(null);
+        }
+    }, [error]);
+
+    return (
+        <QualitiesContext.Provider
+            value={{
+                isLoading,
+                qualities,
+                getQuality
+            }}
+        >
+            {!isLoading ? children : <h1>Qualities Loading ...</h1>}
+        </QualitiesContext.Provider>
+    );
+};
+
+QualitiesProvider.propTypes = {
+    children: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.node), PropTypes.node])
+};
+
+export default QualitiesProvider;

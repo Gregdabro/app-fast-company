@@ -5,8 +5,8 @@ import PropTypes from "prop-types";
 const QualitiesList = ({ qualities }) => {
     return (
         <>
-            {qualities.map((qual) => (
-                <Quality {...qual} key={qual._id} />
+            {qualities.map((qual, index) => (
+                <Quality id={qual} key={qual + index} />
             ))}
         </>
     );
