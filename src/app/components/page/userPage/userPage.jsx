@@ -1,22 +1,19 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { useParams } from "react-router-dom";
-import api from "../../../api";
 import Loader from "../../UI/Loader/Loader";
 import UserCard from "../../UI/userCard";
 import QualitiesCard from "../../UI/qualitiesCard";
 import MeetingsCard from "../../UI/meetingsCard";
 import Comments from "../../UI/comments";
+import { useUser } from "../../../hooks/useUsers";
 
 const UserPage = () => {
-    const [user, setUser] = useState(undefined);
     const params = useParams();
     const { userId } = params;
 
-    useEffect(() => {
-        api.users.getById(userId).then((data) => setUser(data));
-    }, []);
-
-    if (user) {
+    const { users, isLoading } = useUser();
+    const user = users.find((user) => user._id === userId);
+    if (!isLoading) {
         return (
             <div className="container">
                 <div className="row gutters-sm">

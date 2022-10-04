@@ -3,6 +3,7 @@ import { toast } from "react-toastify";
 import PropTypes from "prop-types";
 import userService from "../services/user.service";
 import Loader from "../components/UI/Loader/Loader";
+import { errorCatcher } from "../utils/errorCatcher";
 
 const UserContext = React.createContext();
 
@@ -21,13 +22,8 @@ const UserProvider = ({ children }) => {
             setUsers(content);
             setIsLoading(false);
         } catch (error) {
-            errorCatcher(error);
+            errorCatcher(error, setError);
         }
-    }
-
-    function errorCatcher(error) {
-        const { message } = error.response.data;
-        setError(message);
     }
 
     useEffect(() => {
@@ -42,7 +38,7 @@ const UserProvider = ({ children }) => {
 
     return (
         <UserContext.Provider
-            value={ { users } }
+            value={ { users, isLoading } }
         >
             {!isLoading ? children : <Loader/>}
         </UserContext.Provider>

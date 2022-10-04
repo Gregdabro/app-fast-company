@@ -1,7 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { paginate } from "../../../utils/paginate";
 import Pagination from "../../common/pagination";
-import api from "../../../api";
 import GroupList from "../../common/groupList";
 import SearchStatus from "../../UI/searchStatus";
 import UsersTable from "../../UI/usersTable";
@@ -9,19 +8,16 @@ import { orderBy } from "lodash";
 import Loader from "../../UI/Loader/Loader";
 import SearchInput from "../../common/form/searchInput";
 import { useUser } from "../../../hooks/useUsers";
+import { useProfessions } from "../../../hooks/useProfession";
 
 const UsersListPage = () => {
     const [currentPage, setCurrentPage] = useState(1);
-    const [professions, setProfession] = useState(null);
     const [selectedProf, setSelectedProf] = useState(null);
     const [sortBy, setSortBy] = useState({ path: "name", order: "asc" });
     const [searchQuery, setSearchQuery] = useState("");
 
     const { users } = useUser();
-
-    useEffect(() => {
-        api.professions.fetchAll().then((data) => setProfession(data));
-    }, []);
+    const { professions } = useProfessions();
 
     const handleDelete = (userId) => {
         console.log("userId", userId);
@@ -63,7 +59,7 @@ const UsersListPage = () => {
     const filteredUsers = users &&
         users.filter((user) => {
             if (selectedProf) {
-                return user.profession._id === selectedProf._id;
+                return user.profession === selectedProf._id;
             } else if (searchQuery) {
                 return user.name.toLowerCase().includes(searchQuery.toLowerCase());
             } else {

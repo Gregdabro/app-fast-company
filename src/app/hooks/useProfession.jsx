@@ -2,6 +2,7 @@ import React, { useEffect, useState, useContext } from "react";
 import PropTypes from "prop-types";
 import { toast } from "react-toastify";
 import professionService from "../services/profession.service";
+import { errorCatcher } from "../utils/errorCatcher";
 
 const ProfessionContext = React.createContext();
 
@@ -31,7 +32,7 @@ export const ProfessionProvider = ({ children }) => {
             setProfessions(content);
             setIsLoading(false);
         } catch (error) {
-            errorCatcher(error);
+            errorCatcher(error, setError);
         }
     }
 
@@ -39,12 +40,11 @@ export const ProfessionProvider = ({ children }) => {
         return professions.find((p) => p._id === id);
     }
 
-    function errorCatcher(error) {
-        const { message } = error.response.data;
-        setError(message);
-    }
-
-    return <ProfessionContext.Provider value={{ professions, getProfession, isLoading }}>{children}</ProfessionContext.Provider>;
+    return <ProfessionContext.Provider
+        value={{ professions, getProfession, isLoading }}
+    >
+        {children}
+    </ProfessionContext.Provider>;
 };
 
 ProfessionProvider.propTypes = {
