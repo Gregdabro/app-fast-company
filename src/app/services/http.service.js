@@ -1,6 +1,7 @@
 import axios from "axios";
 import { toast } from "react-toastify";
 import configFile from "../config.json";
+import { transformData } from "../utils/transformData";
 
 axios.defaults.baseURL = configFile.apiEndpoint;
 
@@ -15,14 +16,6 @@ axios.interceptors.request.use(
         return Promise.reject(error);
     }
 );
-
-function transformData(data) {
-    return data
-        ? Object.keys(data).map(key => ({
-            ...data[key]
-        }))
-        : [];
-}
 
 axios.interceptors.response.use(
     (res) => {
