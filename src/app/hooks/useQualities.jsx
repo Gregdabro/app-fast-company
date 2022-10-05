@@ -47,7 +47,7 @@ const QualitiesProvider = ({ children }) => {
                 getQuality
             }}
         >
-            {!isLoading ? children : <h1>Qualities Loading ...</h1>}
+            {children}
         </QualitiesContext.Provider>
     );
 };
