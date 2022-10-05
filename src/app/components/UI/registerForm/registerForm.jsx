@@ -8,6 +8,7 @@ import CheckBoxField from "../../common/form/checkBoxField";
 import { validatorConfig } from "./validatorConfig";
 import { useQualities } from "../../../hooks/useQualities";
 import { useProfessions } from "../../../hooks/useProfession";
+import { useAuth } from "../../../hooks/useAuth";
 
 const RegisterForm = () => {
     const { professions } = useProfessions();
@@ -27,6 +28,7 @@ const RegisterForm = () => {
         qualities: [],
         license: false
     });
+    const { signUp } = useAuth();
     useEffect(() => {
         validate();
     }, [data]);
@@ -37,30 +39,6 @@ const RegisterForm = () => {
             [target.name]: target.value
         }));
     };
-
-    // const getProfessionById = (id) => {
-    //     for (const prof of professions) {
-    //         if (prof.value === id) {
-    //             return { _id: prof.value, name: prof.label };
-    //         }
-    //     }
-    // };
-
-    // const getQualities = (elements) => {
-    //     const qualitiesArray = [];
-    //     for (const elem of elements) {
-    //         for (const quality in qualities) {
-    //             if (elem.value === qualities[quality].value) {
-    //                 qualitiesArray.push({
-    //                     _id: qualities[quality].value,
-    //                     name: qualities[quality].label,
-    //                     color: qualities[quality].color
-    //                 });
-    //             }
-    //         }
-    //     }
-    //     return qualitiesArray;
-    // };
 
     const validate = () => {
         const errors = validator(data, validatorConfig);
@@ -79,6 +57,7 @@ const RegisterForm = () => {
             qualities: data.qualities.map(q => q.value)
         };
         console.log(newData);
+        signUp(newData);
     };
     return (
         <form onSubmit={handleSubmit}>
