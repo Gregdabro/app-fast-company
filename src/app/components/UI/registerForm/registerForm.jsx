@@ -9,8 +9,10 @@ import { validatorConfig } from "./validatorConfig";
 import { useQualities } from "../../../hooks/useQualities";
 import { useProfessions } from "../../../hooks/useProfession";
 import { useAuth } from "../../../hooks/useAuth";
+import { useHistory } from "react-router-dom";
 
 const RegisterForm = () => {
+    const history = useHistory();
     const { professions } = useProfessions();
     const professionsList = professions.map(prof => ({
         label: prof.name, value: prof._id
@@ -19,6 +21,7 @@ const RegisterForm = () => {
     const qualitiesList = qualities.map(q => ({
         label: q.name, value: q._id
     }));
+    const { signUp } = useAuth();
     const [errors, setErrors] = useState({});
     const [data, setData] = useState({
         email: "",
@@ -28,7 +31,6 @@ const RegisterForm = () => {
         qualities: [],
         license: false
     });
-    const { signUp } = useAuth();
     useEffect(() => {
         validate();
     }, [data]);
@@ -48,7 +50,7 @@ const RegisterForm = () => {
 
     const isValid = Object.keys(errors).length === 0;
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async(e) => {
         e.preventDefault();
         const isValidate = validate();
         if (!isValidate) return;
@@ -57,7 +59,13 @@ const RegisterForm = () => {
             qualities: data.qualities.map(q => q.value)
         };
         console.log(newData);
-        signUp(newData);
+        try {
+            await signUp(newData);
+            history.push("/");
+        } catch (error) {
+            setErrors(error);
+            console.log(error);
+        }
     };
     return (
         <form onSubmit={handleSubmit}>
