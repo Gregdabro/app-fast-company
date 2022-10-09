@@ -5,6 +5,7 @@ import userService from "../services/user.service";
 import { errorCatcher } from "../utils/errorCatcher";
 import { toast } from "react-toastify";
 import { setTokens } from "../services/localStorage.service";
+import configFile from "../config.json";
 
 const httpAuth = axios.create();
 const AuthContext = React.createContext();
@@ -18,7 +19,7 @@ const AuthProvider = ({ children }) => {
     const [error, setError] = useState(null);
 
     async function signUp({ email, password, ...rest }) {
-        const url = `https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${process.env.REACT_APP_FIREBASE_KEY}`;
+        const url = `${configFile.authEndpoint}signUp?key=${process.env.REACT_APP_FIREBASE_KEY}`;
         try {
             const { data } = await httpAuth.post(url, {
                 email,
@@ -30,7 +31,6 @@ const AuthProvider = ({ children }) => {
         } catch (error) {
             errorCatcher(error, setError);
             const { code, message } = error.response.data.error;
-            console.log(code, message);
             if (code === 400) {
                 if (message === "EMAIL_EXISTS") {
                     const errorObject = {
@@ -41,6 +41,30 @@ const AuthProvider = ({ children }) => {
             }
         }
     }
+
+    async function logIn({ email, password, ...rest }) {
+        const url = `${configFile.authEndpoint}signInWithPassword?key=${process.env.REACT_APP_FIREBASE_KEY}`;
+        try {
+            const { data } = await httpAuth.post(url, {
+                email,
+                password,
+                returnSecureToken: true
+            });
+            setTokens(data);
+        } catch (error) {
+            errorCatcher(error, setError);
+            const { code, message } = error.response.data.error;
+            if (code === 400) {
+                if (message === "EMAIL_NOT_FOUND" || message === "INVALID_PASSWORD") {
+                    const errorObject = {
+                        email: "Неверный логин или пароль"
+                    };
+                    throw errorObject;
+                }
+            }
+        }
+    }
+
     async function createUser(data) {
         try {
             const { content } = userService.create(data);
@@ -58,7 +82,7 @@ const AuthProvider = ({ children }) => {
     }, [error]);
 
     return (
-        <AuthContext.Provider value={{ signUp, currentUser }}>
+        <AuthContext.Provider value={{ signUp, logIn, currentUser }}>
             {children}
         </AuthContext.Provider>
     );

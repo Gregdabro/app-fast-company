@@ -11,16 +11,18 @@ import { useProfessions } from "../../../hooks/useProfession";
 import { useAuth } from "../../../hooks/useAuth";
 import { useHistory } from "react-router-dom";
 
+function transformData(array) {
+    return array.map(item => ({
+        label: item.name, value: item._id
+    }));
+}
+
 const RegisterForm = () => {
     const history = useHistory();
     const { professions } = useProfessions();
-    const professionsList = professions.map(prof => ({
-        label: prof.name, value: prof._id
-    }));
+    const professionsList = transformData(professions);
     const { qualities } = useQualities();
-    const qualitiesList = qualities.map(q => ({
-        label: q.name, value: q._id
-    }));
+    const qualitiesList = transformData(qualities);
     const { signUp } = useAuth();
     const [errors, setErrors] = useState({});
     const [data, setData] = useState({
@@ -58,13 +60,11 @@ const RegisterForm = () => {
             ...data,
             qualities: data.qualities.map(q => q.value)
         };
-        console.log(newData);
         try {
             await signUp(newData);
             history.push("/");
         } catch (error) {
             setErrors(error);
-            console.log(error);
         }
     };
     return (

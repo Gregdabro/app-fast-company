@@ -17,7 +17,7 @@ export function getRefreshToken() {
     return localStorage.getItem(TOKEN_KEY);
 }
 
-export function getExpiresToken() {
+export function getExpiresDate() {
     return localStorage.getItem(EXPIRES_KEY);
 }
 
@@ -25,7 +25,7 @@ const localStorageService = {
     setTokens,
     getAccessToken,
     getRefreshToken,
-    getExpiresToken
+    getExpiresDate
 };
 
 export default localStorageService;
