@@ -2,9 +2,9 @@ import React, { useContext, useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import axios from "axios";
 import userService from "../services/user.service";
+import localStorageService, { setTokens } from "../services/localStorage.service";
 import { errorCatcher } from "../utils/errorCatcher";
 import { toast } from "react-toastify";
-import { setTokens } from "../services/localStorage.service";
 import { randomInt } from "../utils/randomInt";
 
 export const httpAuth = axios.create({
@@ -60,6 +60,7 @@ const AuthProvider = ({ children }) => {
                 returnSecureToken: true
             });
             setTokens(data);
+            getUserData();
         } catch (error) {
             errorCatcher(error, setError);
             const { code, message } = error.response.data.error;
@@ -83,6 +84,25 @@ const AuthProvider = ({ children }) => {
             errorCatcher(error, setError);
         }
     }
+
+    async function getUserData() {
+        try {
+            const { content } = await userService.getCurrentUser();
+            setUser(content);
+        } catch (error) {
+            errorCatcher(error, setError);
+        } finally {
+            // setLoading(false);
+        }
+    }
+
+    useEffect(() => {
+        if (localStorageService.getAccessToken()) {
+            getUserData();
+        } else {
+            // setLoading(false);
+        }
+    }, []);
 
     useEffect(() => {
         if (error !== null) {
