@@ -3,5 +3,5 @@ export function transformData(data) {
         ? Object.keys(data).map(key => ({
             ...data[key]
         }))
-        : [];
+        : data;
 }
