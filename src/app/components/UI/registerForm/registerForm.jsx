@@ -62,7 +62,7 @@ const RegisterForm = () => {
         };
         try {
             await signUp(newData);
-            history.push("/");
+            history.replace("/");
         } catch (error) {
             setErrors(error);
         }

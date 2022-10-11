@@ -40,7 +40,7 @@ const LoginForm = () => {
         if (!isValidate) return;
         try {
             await logIn(data);
-            history.push("/");
+            history.replace("/");
         } catch (error) {
             setErrors(error);
         }
