@@ -1,20 +1,21 @@
 import React from "react";
 import PropTypes from "prop-types";
 
-const UserAvatar = ({ user }) => {
+const UserAvatar = ({ userName, size }) => {
     return (
         <img
-            src={`https://avatars.dicebear.com/api/avataaars/${user?.name}.svg`}
-            className="rounded-circle shadow-1-strong me-3"
+            src={`https://avatars.dicebear.com/api/avataaars/${userName}.svg`}
+            className="img-responsive rounded-circle"
             alt="avatar"
-            width="65"
-            height="65"
+            width={size}
+            height={size}
         />
     );
 };
 
 UserAvatar.propTypes = {
-    user: PropTypes.object
+    userName: PropTypes.string,
+    size: PropTypes.string
 };
 
 export default UserAvatar;
