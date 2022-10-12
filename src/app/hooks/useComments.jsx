@@ -34,7 +34,7 @@ export const CommentsProvider = ({ children }) => {
         };
         try {
             const { content } = await commentService.createComment(comment);
-            console.log("content", content);
+            setComments(prevState => [...prevState, content]);
         } catch (error) {
             errorCatcher(error, setError);
         }
@@ -44,7 +44,6 @@ export const CommentsProvider = ({ children }) => {
         try {
             const { content } = await commentService.getComments(userId);
             setComments(content);
-            console.log("content", content);
         } catch (error) {
             errorCatcher(error, setError);
         } finally {

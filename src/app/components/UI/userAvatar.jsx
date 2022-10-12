@@ -7,8 +7,8 @@ const UserAvatar = ({ path, size }) => {
             src={path}
             className="img-responsive rounded-circle"
             alt="avatar"
-            width={size}
-            height={size}
+            width={size || "40"}
+            height={size || "40"}
         />
     );
 };
