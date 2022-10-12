@@ -15,9 +15,8 @@ const UsersListPage = () => {
     const [selectedProf, setSelectedProf] = useState(null);
     const [sortBy, setSortBy] = useState({ path: "name", order: "asc" });
     const [searchQuery, setSearchQuery] = useState("");
-
     const { users } = useUser();
-    const { professions } = useProfessions();
+    const { professions, isLoading: professionsLoading } = useProfessions();
 
     const handleDelete = (userId) => {
         console.log("userId", userId);
@@ -81,7 +80,7 @@ const UsersListPage = () => {
 
         return (
             <div className="d-flex">
-                {professions && (
+                {professions && !professionsLoading && (
                     <div className="d-flex flex-column flex-shrink-0 p-3">
                         <GroupList
                             selectedItem={selectedProf}
