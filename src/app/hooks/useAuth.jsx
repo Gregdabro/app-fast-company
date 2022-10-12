@@ -8,6 +8,7 @@ import { toast } from "react-toastify";
 import { randomInt } from "../utils/randomInt";
 import { useHistory } from "react-router-dom";
 import Loader from "../components/UI/Loader/Loader";
+import { createAvaaatar } from "../utils/createAvaaatar";
 
 export const httpAuth = axios.create({
     baseURL: "https://identitytoolkit.googleapis.com/v1/",
@@ -34,12 +35,14 @@ const AuthProvider = ({ children }) => {
                 password,
                 returnSecureToken: true
             });
+            console.log("data", data);
             setTokens(data);
             await createUser({
                 _id: data.localId,
                 email,
                 rate: randomInt(1, 5),
                 completedMeetings: randomInt(0, 200),
+                image: createAvaaatar(),
                 ...rest
             });
         } catch (error) {
@@ -56,7 +59,7 @@ const AuthProvider = ({ children }) => {
         }
     }
 
-    async function logIn({ email, password, ...rest }) {
+    async function logIn({ email, password }) {
         try {
             const { data } = await httpAuth.post("accounts:signInWithPassword", {
                 email,
