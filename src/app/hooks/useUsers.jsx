@@ -26,6 +26,10 @@ const UserProvider = ({ children }) => {
         }
     }
 
+    function getUserById(userId) {
+        return users.find((user) => user._id === userId);
+    }
+
     useEffect(() => {
         getUsers();
     }, []);
@@ -38,7 +42,7 @@ const UserProvider = ({ children }) => {
 
     return (
         <UserContext.Provider
-            value={ { users, isLoading } }
+            value={ { users, getUserById, isLoading } }
         >
             {!isLoading ? children : <Loader/>}
         </UserContext.Provider>

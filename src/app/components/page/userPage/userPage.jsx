@@ -10,10 +10,10 @@ import { useUser } from "../../../hooks/useUsers";
 const UserPage = () => {
     const params = useParams();
     const { userId } = params;
+    const { getUserById } = useUser();
+    const user = getUserById(userId);
 
-    const { users, isLoading } = useUser();
-    const user = users.find((user) => user._id === userId);
-    if (!isLoading) {
+    if (user) {
         return (
             <div className="container">
                 <div className="row gutters-sm">
