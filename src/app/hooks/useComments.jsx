@@ -51,6 +51,17 @@ export const CommentsProvider = ({ children }) => {
         }
     }
 
+    async function removeComment(id) {
+        try {
+            const { content } = await commentService.removeComment(id);
+            if (content === null) {
+                setComments(prevState => prevState.filter((c) => c._id !== id));
+            }
+        } catch (error) {
+            errorCatcher(error, setError);
+        }
+    }
+
     useEffect(() => {
         if (error !== null) {
             toast(error);
@@ -60,7 +71,7 @@ export const CommentsProvider = ({ children }) => {
 
     return (
         <CommentsContext.Provider
-            value={{ comments, createComment, isLoading }}
+            value={{ isLoading, comments, createComment, removeComment }}
         >
             {children}
         </CommentsContext.Provider>

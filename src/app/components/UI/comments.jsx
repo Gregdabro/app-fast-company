@@ -6,19 +6,14 @@ import PropTypes from "prop-types";
 import { useComments } from "../../hooks/useComments";
 
 const Comments = () => {
-    const { createComment, comments } = useComments();
+    const { createComment, comments, removeComment } = useComments();
 
     const handleSubmit = (data) => {
         createComment(data);
-        // api.comments
-        //     .add({ ...data, pageId: userId })
-        //     .then((data) => setComments([...comments, data]));
     };
 
     const handleRemoveComment = (id) => {
-        // api.comments
-        //     .remove(id)
-        //     .then((commentsForUser) => setComments(commentsForUser));
+        removeComment(id);
     };
 
     const sortedComments = orderBy(comments, ["created_at"], ["desc"]);
