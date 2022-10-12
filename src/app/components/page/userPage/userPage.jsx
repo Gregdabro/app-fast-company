@@ -25,7 +25,7 @@ const UserPage = () => {
                     </div>
                     <div className="col-md-8">
                         <CommentsProvider>
-                            <Comments userId={userId} />
+                            <Comments />
                         </CommentsProvider>
                     </div>
                 </div>
