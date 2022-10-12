@@ -9,6 +9,7 @@ import Loader from "../../UI/Loader/Loader";
 import SearchInput from "../../common/form/searchInput";
 import { useUser } from "../../../hooks/useUsers";
 import { useProfessions } from "../../../hooks/useProfession";
+import { useAuth } from "../../../hooks/useAuth";
 
 const UsersListPage = () => {
     const [currentPage, setCurrentPage] = useState(1);
@@ -16,6 +17,7 @@ const UsersListPage = () => {
     const [sortBy, setSortBy] = useState({ path: "name", order: "asc" });
     const [searchQuery, setSearchQuery] = useState("");
     const { users } = useUser();
+    const { currentUser } = useAuth();
     const { professions, isLoading: professionsLoading } = useProfessions();
 
     const handleDelete = (userId) => {
@@ -55,17 +57,20 @@ const UsersListPage = () => {
         setSearchQuery(e.target.value);
     };
 
-    const filteredUsers = users &&
-        users.filter((user) => {
-            if (selectedProf) {
-                return user.profession === selectedProf._id;
-            } else if (searchQuery) {
-                return user.name.toLowerCase().includes(searchQuery.toLowerCase());
-            } else {
-                return users;
-            }
-        });
     if (users) {
+        function filterUsers(data) {
+            const filteredUsers = data &&
+                data.filter((user) => {
+                    if (selectedProf) {
+                        return user.profession === selectedProf._id;
+                    } else if (searchQuery) {
+                        return user.name.toLowerCase().includes(searchQuery.toLowerCase());
+                    }
+                    return data;
+                });
+            return filteredUsers.filter((u) => u._id !== currentUser._id);
+        }
+        const filteredUsers = filterUsers(users);
         const count = filteredUsers.length;
         const sortedUsers = orderBy(
             filteredUsers,
