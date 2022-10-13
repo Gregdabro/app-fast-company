@@ -28,7 +28,7 @@ const Comments = () => {
                     />
                 </div>
             </div>
-            {sortedComments && (
+            {sortedComments.length > 0 && (
                 <div className="card mb-3">
                     <div className="card-body ">
                         <h2>Comments</h2>
