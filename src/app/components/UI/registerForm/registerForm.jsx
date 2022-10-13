@@ -10,19 +10,14 @@ import { useQualities } from "../../../hooks/useQualities";
 import { useProfessions } from "../../../hooks/useProfession";
 import { useAuth } from "../../../hooks/useAuth";
 import { useHistory } from "react-router-dom";
-
-function transformData(array) {
-    return array.map(item => ({
-        label: item.name, value: item._id
-    }));
-}
+import { transformArrayData } from "../../../utils/transformArray";
 
 const RegisterForm = () => {
     const history = useHistory();
     const { professions } = useProfessions();
-    const professionsList = transformData(professions);
+    const professionsList = transformArrayData(professions);
     const { qualities } = useQualities();
-    const qualitiesList = transformData(qualities);
+    const qualitiesList = transformArrayData(qualities);
     const { signUp } = useAuth();
     const [errors, setErrors] = useState({});
     const [data, setData] = useState({
