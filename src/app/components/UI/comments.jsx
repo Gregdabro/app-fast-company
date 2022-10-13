@@ -1,29 +1,19 @@
-import React, { useEffect, useState } from "react";
-import api from "../../api";
+import React from "react";
 import { orderBy } from "lodash";
 import AddCommentForm from "../common/comments/addCommentForm";
 import CommentsList from "../common/comments/commentsList";
 import PropTypes from "prop-types";
+import { useComments } from "../../hooks/useComments";
 
-const Comments = ({ userId }) => {
-    const [comments, setComments] = useState([]);
-
-    useEffect(() => {
-        api.comments
-            .fetchCommentsForUser(userId)
-            .then((data) => setComments(data));
-    }, []);
+const Comments = () => {
+    const { createComment, comments, removeComment } = useComments();
 
     const handleSubmit = (data) => {
-        api.comments
-            .add({ ...data, pageId: userId })
-            .then((data) => setComments([...comments, data]));
+        createComment(data);
     };
 
     const handleRemoveComment = (id) => {
-        api.comments
-            .remove(id)
-            .then((commentsForUser) => setComments(commentsForUser));
+        removeComment(id);
     };
 
     const sortedComments = orderBy(comments, ["created_at"], ["desc"]);
@@ -38,7 +28,7 @@ const Comments = ({ userId }) => {
                     />
                 </div>
             </div>
-            {sortedComments && (
+            {sortedComments.length > 0 && (
                 <div className="card mb-3">
                     <div className="card-body ">
                         <h2>Comments</h2>

@@ -40,8 +40,13 @@ const LoginForm = () => {
         if (!isValidate) return;
         try {
             await logIn(data);
-            history.replace("/");
+            history.push(
+                history.location.state
+                    ? history.location.state.from.pathname
+                    : "/"
+            );
         } catch (error) {
+            console.log("error", error);
             setErrors(error);
         }
     };
