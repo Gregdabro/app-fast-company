@@ -17,7 +17,6 @@ const Comments = () => {
     };
 
     const sortedComments = orderBy(comments, ["created_at"], ["desc"]);
-
     return (
         <>
             <div className="card mb-2">

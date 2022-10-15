@@ -35,7 +35,6 @@ const AuthProvider = ({ children }) => {
                 password,
                 returnSecureToken: true
             });
-            console.log("data", data);
             setTokens(data);
             await createUser({
                 _id: data.localId,
@@ -108,8 +107,45 @@ const AuthProvider = ({ children }) => {
         }
     }
 
-    async function userUpdate(data) {
-        console.log(data);
+    async function updateUser(data) {
+        try {
+            const { content } = await userService.update(data);
+            setUser(content);
+        } catch (error) {
+            errorCatcher(error, setError);
+        }
+    }
+
+    async function userUpdate({ name, email, profession, sex, qualities }) {
+        const idToken = localStorageService.getAccessToken();
+        try {
+            const { data } = await httpAuth.post("accounts:update", {
+                idToken,
+                displayName: name,
+                email,
+                returnSecureToken: true
+            });
+            setTokens(data);
+            await updateUser({
+                ...currentUser,
+                email,
+                name,
+                profession,
+                qualities,
+                sex
+            });
+        } catch (error) {
+            errorCatcher(error, setError);
+            const { code, message } = error.response.data.error;
+            if (code === 400) {
+                if (message === "EMAIL_EXISTS") {
+                    const errorObject = {
+                        email: "Пользователь с таким email уже существует"
+                    };
+                    throw errorObject;
+                }
+            }
+        }
     }
 
     useEffect(() => {

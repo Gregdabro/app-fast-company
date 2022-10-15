@@ -4,7 +4,7 @@ import TextField from "../../common/form/textField";
 import SelectField from "../../common/form/selectField";
 import RadioField from "../../common/form/radioField";
 import MultiSelectField from "../../common/form/multiSelectField";
-import { useHistory, useParams } from "react-router-dom";
+import { useParams, useHistory } from "react-router-dom";
 import { validatorConfig } from "./validatorConfig";
 import { useProfessions } from "../../../hooks/useProfession";
 import { useQualities } from "../../../hooks/useQualities";
@@ -48,7 +48,7 @@ const UserEditForm = () => {
 
     const isValid = Object.keys(errors).length === 0;
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async(e) => {
         e.preventDefault();
         const isValidate = validate();
         if (!isValidate) return;
@@ -56,13 +56,12 @@ const UserEditForm = () => {
             ...data,
             qualities: data.qualities.map(q => q.value)
         };
-        userUpdate(newData);
-        // api.users.update(userId, {
-        //     ...data,
-        //     profession: getProfessionById(profession),
-        //     qualities: getQualities(qualities)
-        // });
-        history.replace(`/users/${userId}`);
+        try {
+            await userUpdate(newData);
+            history.replace(`/users/${userId}`);
+        } catch (error) {
+            setErrors(error);
+        }
     };
     return (
         <form onSubmit={handleSubmit}>
