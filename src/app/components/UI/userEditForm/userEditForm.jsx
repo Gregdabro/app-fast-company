@@ -1,18 +1,26 @@
 import React, { useEffect, useState } from "react";
 import { validator } from "../../../utils/validator";
 import TextField from "../../common/form/textField";
-import api from "../../../api";
 import SelectField from "../../common/form/selectField";
 import RadioField from "../../common/form/radioField";
 import MultiSelectField from "../../common/form/multiSelectField";
-import { useHistory, useParams } from "react-router-dom";
+import { useParams, useHistory } from "react-router-dom";
 import { validatorConfig } from "./validatorConfig";
+import { useProfessions } from "../../../hooks/useProfession";
+import { useQualities } from "../../../hooks/useQualities";
+import { transformArrayData } from "../../../utils/transformArray";
+import { useAuth } from "../../../hooks/useAuth";
 
 const UserEditForm = () => {
     const history = useHistory();
     const params = useParams();
+    const { userUpdate } = useAuth();
     const { userId } = params;
-    const [professions, setProfession] = useState(null);
+    const { professions } = useProfessions();
+    const professionsList = transformArrayData(professions);
+    const { qualities } = useQualities();
+    const qualitiesList = transformArrayData(qualities);
+    const [errors, setErrors] = useState({});
     const [data, setData] = useState({
         name: "",
         email: "",
@@ -20,28 +28,6 @@ const UserEditForm = () => {
         sex: "mail",
         qualities: []
     });
-    const [errors, setErrors] = useState({});
-    const [qualities, setQualities] = useState([]);
-
-    useEffect(() => {
-        api.professions.fetchAll().then((data) => {
-            const professionsList =
-                Object.keys(data).map((professionName) => ({
-                    label: data[professionName].name,
-                    value: data[professionName]._id
-                }));
-            setProfession(professionsList);
-        });
-        api.qualities.fetchAll().then((data) => {
-            const qualitiesList =
-                Object.keys(data).map((optionName) => ({
-                    label: data[optionName].name,
-                    value: data[optionName]._id,
-                    color: data[optionName].color
-                }));
-            setQualities(qualitiesList);
-        });
-    }, []);
 
     useEffect(() => {
         validate();
@@ -54,30 +40,6 @@ const UserEditForm = () => {
         }));
     };
 
-    const getProfessionById = (id) => {
-        for (const prof of professions) {
-            if (prof.value === id) {
-                return { _id: prof.value, name: prof.label };
-            }
-        }
-    };
-
-    const getQualities = (elements) => {
-        const qualitiesArray = [];
-        for (const elem of elements) {
-            for (const quality in qualities) {
-                if (elem.value === qualities[quality].value) {
-                    qualitiesArray.push({
-                        _id: qualities[quality].value,
-                        name: qualities[quality].label,
-                        color: qualities[quality].color
-                    });
-                }
-            }
-        }
-        return qualitiesArray;
-    };
-
     const validate = () => {
         const errors = validator(data, validatorConfig);
         setErrors(errors);
@@ -86,17 +48,20 @@ const UserEditForm = () => {
 
     const isValid = Object.keys(errors).length === 0;
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async(e) => {
         e.preventDefault();
         const isValidate = validate();
         if (!isValidate) return;
-        const { profession, qualities } = data;
-        api.users.update(userId, {
+        const newData = {
             ...data,
-            profession: getProfessionById(profession),
-            qualities: getQualities(qualities)
-        });
-        history.replace(`/users/${userId}`);
+            qualities: data.qualities.map(q => q.value)
+        };
+        try {
+            await userUpdate(newData);
+            history.replace(`/users/${userId}`);
+        } catch (error) {
+            setErrors(error);
+        }
     };
     return (
         <form onSubmit={handleSubmit}>
@@ -120,7 +85,7 @@ const UserEditForm = () => {
                 defaultOption="Choose..."
                 name="profession"
                 onChange={handleChange}
-                options={professions}
+                options={professionsList}
                 error={errors.profession}
             />
             <RadioField
@@ -136,7 +101,7 @@ const UserEditForm = () => {
                 label="Выбирите ваш пол"
             />
             <MultiSelectField
-                options={qualities}
+                options={qualitiesList}
                 onChange={handleChange}
                 name="qualities"
                 label="Выбирите ваши качества"
