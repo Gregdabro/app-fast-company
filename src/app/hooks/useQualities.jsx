@@ -32,6 +32,19 @@ const QualitiesProvider = ({ children }) => {
         return qualities.find((q) => q._id === id);
     };
 
+    function getQualitiesListByIds(qualitiesIds) {
+        const qualitiesArray = [];
+        for (const qualityId of qualitiesIds) {
+            for (const quality of qualities) {
+                if (quality._id === qualityId) {
+                    qualitiesArray.push(quality);
+                    break;
+                }
+            }
+        }
+        return qualitiesArray;
+    }
+
     useEffect(() => {
         if (error !== null) {
             toast(error);
@@ -44,7 +57,8 @@ const QualitiesProvider = ({ children }) => {
             value={{
                 isLoading,
                 qualities,
-                getQuality
+                getQuality,
+                getQualitiesListByIds
             }}
         >
             {children}
