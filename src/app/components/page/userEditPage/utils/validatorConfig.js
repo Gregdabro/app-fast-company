@@ -9,14 +9,26 @@ export const validatorConfig = {
     },
     name: {
         isRequired: {
-            message: "Name is required!"
-        },
-        isCapitalSymbol: {
-            message: "Name must contain a minimum of 1 upper case letter!"
+            message: "Имя обязательно для заполнения"
         },
         min: {
-            message: "Passwords must be at least 3 characters!",
+            message: "Имя должно состоять минимум из 3 символов",
             value: 3
+        }
+    },
+    password: {
+        isRequired: {
+            message: "Password is required!"
+        },
+        isCapitalSymbol: {
+            message: "Password must contain a minimum of 1 upper case letter!"
+        },
+        isContainDigit: {
+            message: "Password must contain a minimum of 1 digit!"
+        },
+        min: {
+            message: "Passwords must be at least 8 characters!",
+            value: 8
         }
     },
     profession: {
