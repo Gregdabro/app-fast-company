@@ -14,7 +14,7 @@ import { useAuth } from "../../../hooks/useAuth";
 const UserEditForm = () => {
     const history = useHistory();
     const params = useParams();
-    const { userUpdate } = useAuth();
+    const { updateUserData } = useAuth();
     const { userId } = params;
     const { professions } = useProfessions();
     const professionsList = transformArrayData(professions);
@@ -57,7 +57,7 @@ const UserEditForm = () => {
             qualities: data.qualities.map(q => q.value)
         };
         try {
-            await userUpdate(newData);
+            await updateUserData(newData);
             history.replace(`/users/${userId}`);
         } catch (error) {
             setErrors(error);
